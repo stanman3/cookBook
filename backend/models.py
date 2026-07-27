@@ -27,7 +27,7 @@ class Ingredient(Base):
     id = Column(Integer, primary_key=True, index=True)
     recipeId = Column(Integer, ForeignKey("recipes.id"), index=True)
     name = Column(String)
-    quantity = Column(Integer)
+    quantity = Column(String)
 
 class FavoriteRecipe(Base):
     __tablename__ = 'favoriterecipes'
