@@ -2,6 +2,7 @@ from fastapi import Depends, HTTPException, status
 from fastapi.security import OAuth2PasswordBearer
 from sqlalchemy.orm import Session
 from database import SessionLocal
+from typing import Annotated
 import schemas
 from datetime import datetime, timedelta, timezone
 from jose import JWTError, jwt
@@ -24,6 +25,8 @@ def get_db():
         yield db
     finally:
         db.close()
+
+db_dependency = Annotated[Session, Depends(get_db)]
 
 def verify_password(plain, hashed):
     return pwd_context.verify(plain, hashed)

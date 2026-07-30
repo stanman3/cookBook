@@ -1,0 +1,4 @@
+{
+    "pythonPath": "./env/bin/python",
+    "include": ["."]
+}
