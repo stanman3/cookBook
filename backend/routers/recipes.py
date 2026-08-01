@@ -1,10 +1,7 @@
 from fastapi import APIRouter, HTTPException, Depends
-from database import SessionLocal, engine
-from sqlalchemy.orm import Session
 import models
-from typing import Annotated
-from schemas import RecipeCreate, RecipeResponse
-from auth import get_db, db_dependency
+from schemas import RecipeCreate
+from auth import db_dependency, get_current_active_user
 
 router = APIRouter()
 
@@ -14,8 +11,8 @@ async def get_recipes(db: db_dependency):
     return result
 
 @router.post('/recipes/')
-async def add_recipe(recipe: RecipeCreate, db: db_dependency):
-    db_recipe = models.Recipe(authorId = 1, title = recipe.title, description = recipe.description, cookingTime = recipe.cookingTime, difficulty = recipe.difficulty, imageUrl = recipe.imageUrl)
+async def add_recipe(recipe: RecipeCreate, db: db_dependency, current_user: models.User = Depends(get_current_active_user)):
+    db_recipe = models.Recipe(authorId = current_user.id, title = recipe.title, description = recipe.description, cookingTime = recipe.cookingTime, difficulty = recipe.difficulty, imageUrl = recipe.imageUrl)
     db.add(db_recipe)
     db.commit()
     db.refresh(db_recipe)
@@ -29,8 +26,8 @@ async def get_recipe(id: int, db: db_dependency):
     return result
 
 @router.put('/recipes/{id}')
-async def update_recipe(id: int, updated: RecipeCreate, db: db_dependency):
-    recipe = db.query(models.Recipe).filter(models.Recipe.id == id).first()
+async def update_recipe(id: int, updated: RecipeCreate, db: db_dependency, current_user: models.User = Depends(get_current_active_user)):
+    recipe = db.query(models.Recipe).filter(models.Recipe.authorId == current_user.id, models.Recipe.id == id).first()
     if not recipe:
         raise HTTPException(status_code=404, detail='Recipe not found')
     recipe.title = updated.title  # pyright: ignore[reportAttributeAccessIssue]
@@ -43,8 +40,8 @@ async def update_recipe(id: int, updated: RecipeCreate, db: db_dependency):
     return recipe
 
 @router.delete('/recipes/{id}')
-async def delete_recipe(id: int, db: db_dependency):
-    recipe = db.query(models.Recipe).filter(models.Recipe.id == id).first()
+async def delete_recipe(id: int, db: db_dependency, current_user: models.User = Depends(get_current_active_user)):
+    recipe = db.query(models.Recipe).filter(models.Recipe.authorId == current_user.id, models.Recipe.id == id).first()
     if not recipe:
         raise HTTPException(status_code=404, detail='Recipe not found')
     db.delete(recipe)
