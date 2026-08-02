@@ -11,7 +11,22 @@ export function AuthProvider({ children }) {
     else localStorage.removeItem('token');
   }, [token]);
 
-  const login = (newToken) => setToken(newToken);
+  const login = async (newToken) => {
+    setToken(newToken);
+    const res = await fetch('http://localhost:8000/users/me/', {
+      headers: { Authorization: `Bearer ${newToken}` }
+    });
+    const userData = await res.json();
+    setUser(userData);
+  };
+
+  useEffect(() => {
+    if (token) {
+      fetch('http://localhost:8000/users/me/', {
+        headers: { Authorization: `Bearer ${token}` }
+      }).then(r => r.json()).then(setUser).catch(() => setToken(null));
+    }
+  }, []);
 
   const logout = () => {
     setToken(null);

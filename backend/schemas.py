@@ -59,7 +59,6 @@ class FavoriteRecipeResponse(BaseModel):
         from_attributes = True
 
 class CommentCreate(BaseModel):
-    recipeId: int
     content: str
 
 class CommentResponse(BaseModel):

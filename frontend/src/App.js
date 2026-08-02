@@ -8,6 +8,7 @@ import Register from './pages/Register';
 import Recipes from './pages/Recipes';
 import RecipeDetail from './pages/RecipeDetail';
 import RecipeForm from './pages/RecipeForm';
+import RecipeEdit from './pages/RecipeEdit';
 import Favorites from './pages/Favorites';
 import MealPlans from './pages/MealPlans';
 
@@ -24,6 +25,9 @@ export default function App() {
           <Route path="/recipes/:id" element={<RecipeDetail />} />
           <Route path="/recipes/new" element={
             <ProtectedRoute><RecipeForm /></ProtectedRoute>
+          } />
+          <Route path="/recipes/:id/edit" element={
+            <ProtectedRoute><RecipeEdit /></ProtectedRoute>
           } />
           <Route path="/favorites" element={
             <ProtectedRoute><Favorites /></ProtectedRoute>

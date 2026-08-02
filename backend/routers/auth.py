@@ -1,11 +1,15 @@
 from fastapi import APIRouter, HTTPException, Depends
 from fastapi.security import OAuth2PasswordRequestForm
 import models
-from auth import db_dependency, get_password_hash, authenticate_user, create_access_token, ACCESS_TOKEN_EXPIRE_MINUTES
-from schemas import UserCreate, TokenData
+from auth import db_dependency, get_password_hash, authenticate_user, create_access_token, ACCESS_TOKEN_EXPIRE_MINUTES, get_current_active_user
+from schemas import UserCreate, UserResponse
 from datetime import timedelta
 
 router = APIRouter()
+
+@router.get('/users/me/')
+async def get_me(current_user: models.User = Depends(get_current_active_user)):
+    return current_user
 
 @router.post('/register/')
 async def register(user: UserCreate, db: db_dependency): # pyright: ignore[reportGeneralTypeIssues]

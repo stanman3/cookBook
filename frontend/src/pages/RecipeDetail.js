@@ -1,11 +1,11 @@
 import { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
-import { getRecipe, getComments, addComment, deleteComment, addFavorite, removeFavorite, getFavorites, deleteMealPlan, addMealPlan } from '../services/api';
+import { getRecipe, getComments, addComment, deleteComment, addFavorite, removeFavorite, getFavorites, deleteMealPlan, addMealPlan, deleteRecipe } from '../services/api';
 import { useAuth } from '../context/AuthContext';
 
 export default function RecipeDetail() {
   const { id } = useParams();
-  const { token, isLoggedIn } = useAuth();
+  const { token, isLoggedIn, user } = useAuth();
   const navigate = useNavigate();
 
   const [recipe, setRecipe] = useState(null);
@@ -59,6 +59,12 @@ export default function RecipeDetail() {
     setMealDate('');
   };
 
+  const handleDelete = async () => {
+    if (!window.confirm('Delete this recipe?')) return;
+    await deleteRecipe(id, token);
+    navigate('/recipes');
+  };
+
   if (loading) return <div style={{ textAlign: 'center', padding: '4rem', color: 'var(--muted)' }}>Loading...</div>;
   if (!recipe) return <div style={{ textAlign: 'center', padding: '4rem', color: 'var(--muted)' }}>Recipe not found.</div>;
 
@@ -80,6 +86,36 @@ export default function RecipeDetail() {
               <span style={{ color: diffColor[recipe.difficulty], fontWeight: 600 }}>{recipe.difficulty}</span>
             </div>
           </div>
+          {user?.id === recipe.authorId && (
+            <div style={{ display: 'flex', gap: '0.75rem' }}>
+              <button
+                onClick={() => navigate(`/recipes/${id}/edit`)}
+                style={{
+                  background: 'var(--primary-xlight)',
+                  color: 'var(--primary)',
+                  padding: '10px 20px',
+                  borderRadius: 'var(--radius-sm)',
+                  fontWeight: 600,
+                  fontSize: '0.9rem',
+                }}
+              >
+                Edit
+              </button>
+              <button
+                onClick={handleDelete}
+                style={{
+                  background: '#FEE2E2',
+                  color: '#991B1B',
+                  padding: '10px 20px',
+                  borderRadius: 'var(--radius-sm)',
+                  fontWeight: 600,
+                  fontSize: '0.9rem',
+                }}
+              >
+                Delete
+              </button>
+            </div>
+          )}
           {isLoggedIn && (
             <button onClick={handleToggleFavorite} style={{
               background: isFavorite ? '#FEE2E2' : 'var(--primary-xlight)',

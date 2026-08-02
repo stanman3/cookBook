@@ -45,7 +45,7 @@ export const updateRecipe = (id, data, token) =>
   }).then(r => r.json());
 
 export const deleteRecipe = (id, token) =>
-  fetch(`${BASE_URL}/recipes/${id}`, {
+  fetch(`${BASE_URL}/recipes/${id}/`, {
     method: 'DELETE',
     headers: getHeaders(token),
   }).then(r => r.json());

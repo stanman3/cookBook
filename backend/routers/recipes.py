@@ -44,6 +44,11 @@ async def delete_recipe(id: int, db: db_dependency, current_user: models.User = 
     recipe = db.query(models.Recipe).filter(models.Recipe.authorId == current_user.id, models.Recipe.id == id).first()
     if not recipe:
         raise HTTPException(status_code=404, detail='Recipe not found')
+    db.query(models.FavoriteRecipe).filter(models.FavoriteRecipe.recipeId == id).delete()
+    db.query(models.Comment).filter(models.Comment.recipeId == id).delete()
+    db.query(models.MealPlan).filter(models.MealPlan.recipeId == id).delete()
+    db.query(models.Ingredient).filter(models.Ingredient.recipeId == id).delete()
+    
     db.delete(recipe)
     db.commit()
     return {"message": "Recipe deleted successfully"}
