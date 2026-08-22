@@ -5,9 +5,12 @@ from sqlalchemy.orm import sessionmaker, declarative_base
 
 load_dotenv()
 
-DATABASE_URL = os.getenv("DATABASE_URL", "postgresql://postgres:Rctvybun97.@localhost:5432/CookBook")
+DATABASE_URL = os.getenv("DATABASE_URL")
 
 print("DATABASE_URL exists:", DATABASE_URL is not None)
+
+if not DATABASE_URL:
+    raise RuntimeError("DATABASE_URL environment variable is missing")
 
 engine = create_engine(DATABASE_URL)
 
