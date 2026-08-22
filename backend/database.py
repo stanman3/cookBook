@@ -7,6 +7,8 @@ load_dotenv()
 
 URL_DATABASE = os.getenv("DATABASE_URL", "postgresql://postgres:Rctvybun97.@localhost:5432/CookBook")
 
+print("DATABASE_URL:", os.getenv("DATABASE_URL"))
+
 engine = create_engine(URL_DATABASE)
 
 SessionLocal = sessionmaker(autocommit=False, autoflush=False, bind=engine)
