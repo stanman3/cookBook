@@ -7,8 +7,6 @@ load_dotenv()
 
 DATABASE_URL = os.getenv("DATABASE_URL")
 
-print("DATABASE_URL exists:", DATABASE_URL is not None)
-
 if not DATABASE_URL:
     raise RuntimeError("DATABASE_URL environment variable is missing")
 
