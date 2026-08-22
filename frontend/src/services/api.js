@@ -1,4 +1,4 @@
-const BASE_URL = 'http://cookbook-production-fda0.up.railway.app';
+const BASE_URL = 'https://cookbook-production-fda0.up.railway.app';
 
 const getHeaders = (token) => ({
   'Content-Type': 'application/json',
