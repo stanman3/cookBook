@@ -7,7 +7,11 @@ from database import engine
 app = FastAPI()
 models.Base.metadata.create_all(bind=engine)
 
-app.add_middleware(CORSMiddleware, allow_origins=["http://localhost:3000"], allow_credentials=True, allow_methods=["*"], allow_headers=["*"])
+app.add_middleware(CORSMiddleware, allow_origins=[
+        "http://localhost:3000",
+        "https://frontend-production-babd.up.railway.app",
+        "https://cookbook.stanislavmanolov.com"
+    ], allow_credentials=True, allow_methods=["*"], allow_headers=["*"])
 
 app.include_router(recipes.router)
 app.include_router(auth.router)
