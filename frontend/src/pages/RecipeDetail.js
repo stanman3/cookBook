@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
-import { getRecipe, getComments, addComment, deleteComment, addFavorite, removeFavorite, getFavorites, deleteMealPlan, addMealPlan, deleteRecipe } from '../services/api';
+import { getRecipe, getComments, addComment, deleteComment, addFavorite, removeFavorite, getFavorites, addMealPlan, deleteRecipe } from '../services/api';
 import { useAuth } from '../context/AuthContext';
 
 export default function RecipeDetail() {

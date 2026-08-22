@@ -1,5 +1,6 @@
 import { createContext, useContext, useState, useEffect } from 'react';
 
+const BASE_URL = 'https://cookbook-production-fda0.up.railway.app';
 const AuthContext = createContext(null);
 
 export function AuthProvider({ children }) {
@@ -13,7 +14,7 @@ export function AuthProvider({ children }) {
 
   const login = async (newToken) => {
     setToken(newToken);
-    const res = await fetch('http://localhost:8000/users/me/', {
+    const res = await fetch(`${BASE_URL}/users/me/`, {
       headers: { Authorization: `Bearer ${newToken}` }
     });
     const userData = await res.json();
@@ -22,11 +23,11 @@ export function AuthProvider({ children }) {
 
   useEffect(() => {
     if (token) {
-      fetch('http://localhost:8000/users/me/', {
+      fetch(`${BASE_URL}/users/me/`, {
         headers: { Authorization: `Bearer ${token}` }
       }).then(r => r.json()).then(setUser).catch(() => setToken(null));
     }
-  }, []);
+  }, [token]);
 
   const logout = () => {
     setToken(null);
